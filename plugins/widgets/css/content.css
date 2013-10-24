@@ -1,0 +1,12 @@
+.widget-wrapper {
+    background: #CED7DC;
+    padding: 5px;
+    font-weight: bold;
+    text-align: center;
+    border: 1px dashed #666;
+    font-size: 11px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 5px 0;
+}

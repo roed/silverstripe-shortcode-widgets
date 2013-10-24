@@ -1,0 +1,7 @@
+---
+Name: shortcodewidgetsroutes
+After: framework/routes#coreroutes
+---
+Director:
+  rules:
+    'shortcodewidgets//$Action/$ID/$Name': 'ShortcodeWidgets_Controller'

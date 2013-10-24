@@ -1,0 +1,15 @@
+#widgets-lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.3); z-index: 999; }
+#widgets-lightbox-content {
+    margin: 50px auto 0 auto;
+    background: #eceff0;
+    -webkit-box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, .3);
+    box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, .3);
+    padding: 10px 10px 20px 10px;
+    border-radius: 10px;
+    border: 3px solid #000;
+    position: relative;
+}
+#widgets-lightbox-content > .ui-widget-header { background: none; padding: 0; border: none; }
+#widgets-lightbox-content > h2 { width: 100%; background: #d6d9da; padding: 10px; margin: -10px -10px 10px -10px; border-bottom: 1px solid #c0c0c2; border-radius: 10px 0 0 0; display: block; }
+
+#widgets-lightbox-content .chzn-container { max-width: none; width: 80%!important; }

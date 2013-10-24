@@ -1,2 +1,2 @@
-silverstripe-shortcode-widgets
+Silverstripe shortcode widgets
 ==============================

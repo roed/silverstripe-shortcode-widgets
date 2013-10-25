@@ -11,6 +11,7 @@ SilverStripe 3.x
 <li>Download the module from https://github.com/michelsteege/silverstripe-frontend-editing/archive/master.zip</li>
 <li>Extract the files into your silverstripe root folder</li>
 <li>Run dev/build?flush=all</li>
+</ul>
 
 <h2>Usage</h2>
 Coming soon!

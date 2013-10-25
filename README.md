@@ -8,7 +8,7 @@ SilverStripe 3.x
 
 <h2>Installation</h2>
 <ul>
-<li>Download the module from https://github.com/michelsteege/silverstripe-frontend-editing/archive/master.zip</li>
+<li>Download the module from https://github.com/michelsteege/silverstripe-shortcode-widgets/archive/master.zip</li>
 <li>Extract the files into your silverstripe root folder</li>
 <li>Run dev/build?flush=all</li>
 </ul>

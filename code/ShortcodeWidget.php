@@ -34,7 +34,7 @@ class ShortcodeWidget extends DataObject
     }
 
     public static $db = array(
-        'Title' => 'Varchar'
+        'Title' => 'Varchar(255)'
     );
 
     public static $summary_fields = array(

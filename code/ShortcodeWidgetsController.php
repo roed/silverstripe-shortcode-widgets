@@ -5,7 +5,8 @@ class ShortcodeWidgets_Controller extends Controller
 
     public static $allowed_actions = array(
         'forlightbox',
-        'ExistingWidgetForm'
+        'ExistingWidgetForm',
+	   'loadTitles'
     );
 
     public function init()
@@ -81,9 +82,20 @@ class ShortcodeWidgets_Controller extends Controller
             $id = $data['existingWidget_' . $data['widgetType']];
             $widget = ShortcodeWidget::get()->filter(array('ID' => $id))->first();
             $cmsTitle = $widget->cmsTitle();
-            return '{"ID":'.$id.',"type":"'.$cmsTitle.'"}';
+		   return json_encode(array(
+			   "ID" => $id,
+			   "type" => $cmsTitle,
+			   "title" => $widget->Title
+		   ));
         }
         return false;
     }
+
+	public function loadTitles() {
+		$content = $this->request->postVar('content');
+		$parser = new ShortcodeParser();
+		$parser->register('widget',array('ShortcodeWidgetHandlerAdmin', 'handle'));
+		return $parser->parse($content);
+	}
 
 }

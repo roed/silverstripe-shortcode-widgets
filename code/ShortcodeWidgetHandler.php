@@ -7,6 +7,7 @@ class ShortcodeWidgetHandler
         $topLevel = SSViewer::topLevel();
         $id = $arguments['id'];
         $widget = ShortcodeWidget::get()->filter(array('ID' => $id))->first();
+	    $widget->Controller = $topLevel;
         if(!$widget){
             return '';
         }

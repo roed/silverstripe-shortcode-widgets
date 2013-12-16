@@ -53,11 +53,9 @@
                     var el = jQuery(this);
                     var widgetID = el.data('widgetid');
                     var widgetType = el.data('widgettype');
-                    var type = '';
-                    if(widgetType){
-                        type = widgetType.replace(' ', '-');
-                    }
-                    var widgetdiv = '<div class="widget-wrapper">[widget id='+widgetID+']'+type+'[/widget]</div>';
+                    var widgetTitle = el.data('widgettitle');
+                    var description = widgetTitle + ' ('+widgetType+')';
+                    var widgetdiv = '<div class="widget-wrapper">[widget id='+widgetID+' title="'+widgetTitle+'" type="'+widgetType+'"]'+description+'[/widget]</div>';
                     el.replaceWith(widgetdiv);
                 });
                 var last = content.find('.widget-wrapper').last();
@@ -68,39 +66,48 @@
                 o.content = content.html();
             });
 
+
+		   //load right titles for widgets
+		   ed.onLoadContent.add(function(ed,o) {
+			   var content = jQuery('<div/>').append(o.content);
+			   if (content.find('.widget-wrapper').length > 0) {
+				   jQuery.post(jQuery('base').attr('href') + 'shortcodewidgets/loadTitles',{content: o.content},function(newcontent) {
+						ed.setContent(newcontent);
+				   });
+			   }
+		   });
+
             //replace shortcode to div
             ed.onBeforeSetContent.add(function (ed, o) {
-                var regex = /\[widget(.+?)?\](?:(.+?)?\[\/widget\])?/;
-                var content = jQuery('<div/>').append(o.content);
-                content.find('.widget-wrapper').each(function(){
-                    var widgetEl = jQuery(this);
-                    widgetEl.addClass('mceNonEditable');
-                    var shortcode = widgetEl.html();
-                    var params = {};
-                    var regexResult = shortcode.match(regex);
-                    var paramsString = regexResult[1];
-                    var paramsPairs = paramsString.split(' ');
-                    var type = regexResult[2];
-                    paramsPairs.shift();
-                    for(var i = 0; i < paramsPairs.length; i++){
-                        var paramData = paramsPairs[i].split('=');
-                        params[paramData[0]] = paramData[1];
-                    }
-                    widgetEl.attr('data-widgetid', params.id);
-                    var shortcodeHTML = 'Widget - id: ' + params.id;
-                    if(type){
-                        widgetEl.attr('data-widgettype', type);
-                        shortcodeHTML += ', type: ' + type.replace('-', ' ');
-                    }
-                    widgetEl.html(shortcodeHTML);
-                });
-                var last = content.find('.widget-wrapper:last-child');
-                if(last.length > 0 && last.next().length == 0){
-                    o.content = content.html() + '<p></p>';
-                }else{
-                    o.content = content.html();
-                }
-            });
+			 var content = jQuery('<div/>').append(o.content);
+			 if (content.find('.widget-wrapper').length > 0) {
+				 content.find('.widget-wrapper').each(function(){
+					 var widgetEl = jQuery(this);
+					 widgetEl.addClass('mceNonEditable');
+					 var shortcode = widgetEl.html();
+					 var tempShortcode = jQuery(shortcode.replace(/\[/g,'<').replace(/\]/g,'>'));
+					 var params = {
+						 'id': tempShortcode.attr('id'),
+						 'title': tempShortcode.attr('title'),
+						 'type': tempShortcode.attr('type')
+					 };
+					 widgetEl.attr('data-widgetid', params.id);
+					 widgetEl.attr('data-widgettype', params.type);
+					 widgetEl.attr('data-widgettitle', params.title);
+					 var shortcodeHTML = 'Widget: '+ params.title + ' ('+params.type+' - ID: ' + params.id + ')';
+					 widgetEl.html(shortcodeHTML);
+
+
+				 });
+
+				 var last = content.find('.widget-wrapper:last-child');
+				 if(last.length > 0 && last.next().length == 0){
+					 o.content = content.html() + '<p></p>';
+				 }else{
+					 o.content = content.html();
+				 }
+			 }
+		  });
         }
     });
 
@@ -159,7 +166,7 @@
                             _this.close();
                         }else{
                             var json = jQuery.parseJSON(result);
-                            _this.insertWidget(json.ID, json.type);
+                            _this.insertWidget(json.ID, json.type, json.title);
                             _this.close();
                         }
                     });
@@ -168,9 +175,10 @@
             });
         },
 
-        insertWidget:function (id, type) {
-            var safeType = type.replace(' ', '-');
-            var shortcode = '<div class="widget-wrapper" data-widgetid="'+id+'" data-widgettype="'+safeType+'">[widget id='+id+' type='+safeType+']safeType[/widget]</div>';
+        insertWidget:function (id, type, title) {
+            var safeType = type.replace('"','&quot;');
+            var safeTitle = title.replace('"','&quot;');
+            var shortcode = '<div class="widget-wrapper" data-widgetid="'+id+'" data-widgettype="'+safeType+'" data-widgettitle="'+safeTitle+'">[widget id='+id+' type='+safeType+' title="'+safeTitle+'"]'+safeType+'[/widget]</div>';
             tinyMCE.activeEditor.execCommand('mceInsertContent', false, shortcode);
             tinyMCE.activeEditor.setContent(tinyMCE.activeEditor.getContent(), {skip_undo : 1});
         }
